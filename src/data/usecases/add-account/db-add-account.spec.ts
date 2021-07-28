@@ -1,11 +1,8 @@
-import { AddAccount } from '../../../../domain/usercases/add-account'
-import { AddAccountModel } from '../../../../domain/usercases/add-account-model'
-import { AccountModel } from '../../../../domain/model/account-model'
+import { Encrypter } from './db-account-protocols'
 import { DbAddAccount } from './db-add-account'
-import { Encrypter } from '../../protocols/encrypter'
 
 type SutType = {
-  sut: AddAccount
+  sut: DbAddAccount
   encripterStub: Encrypter
 }
 
@@ -31,12 +28,24 @@ describe('DbAddAccount Usecase', () => {
   test('Should call Encrypter with correct', async () => {
     const { sut, encripterStub } = makeSut()
     const encryptSpy = jest.spyOn(encripterStub, 'encrypt')
-    const accountData: AddAccountModel = {
+    const accountData = {
       name: 'cleriston',
       password: 'sw12digit',
       email: 'cleriston.mari@gmail.com'
     }
     await sut.add(accountData)
     expect(encryptSpy).toBeCalledWith('sw12digit')
+  })
+
+  test('Should throw if Encrypter throws', async () => {
+    const { sut, encripterStub } = makeSut()
+    jest.spyOn(sut, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const accountData = {
+      name: 'cleriston',
+      password: 'sw12digit',
+      email: 'cleriston.mari@gmail.com'
+    }
+    const promise = sut.add(accountData)
+    await expect(promise).rejects.toThrow()
   })
 })
