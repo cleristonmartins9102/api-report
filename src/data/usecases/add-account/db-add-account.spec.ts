@@ -20,10 +20,8 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add (accountData: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
-        id: 'e2dsds',
-        name: 'cleriston',
-        password: 'sw12digit',
-        email: 'cleriston.mari@gmail.com'
+        ...accountData,
+        id: 'valid_id'
       }
       return new Promise(resolve => resolve(fakeAccount))
     }
@@ -89,5 +87,21 @@ describe('DbAddAccount Usecase', () => {
     }
     const promise = sut.add(accountData)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should return an account if on success', async () => {
+    const { sut } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      password: 'valid_password',
+      email: 'valid_email'
+    }
+    const account = await sut.add(accountData)
+    await expect(account).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'encripted_password'
+    })
   })
 })
