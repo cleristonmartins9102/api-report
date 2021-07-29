@@ -1,5 +1,6 @@
 import { BcryptAdapter } from './bcrypt-adapter'
 import bcrypt from 'bcrypt'
+import { Encrypter } from '../../data/protocols/encrypter'
 
 jest.mock('bcrypt', () => ({
   async hash (): Promise<string> {
@@ -8,10 +9,21 @@ jest.mock('bcrypt', () => ({
 })
 )
 
+type SutType = {
+  sut: Encrypter
+}
+
+const makeSut = (): SutType => {
+  const salt = 12
+  const sut = new BcryptAdapter(salt)
+  return {
+    sut
+  }
+}
+
 describe('Bcrypt Adapter', () => {
   test('Shold call bcrypt with correct value', async () => {
-    const salt = 12
-    const sut = new BcryptAdapter(salt)
+    const { sut } = makeSut()
     const encryptSpy = jest.spyOn(bcrypt, 'hash')
     const password = 'valid_password'
     await sut.encrypt(password)
@@ -19,9 +31,7 @@ describe('Bcrypt Adapter', () => {
   })
 
   test('Should return hash is on success', async () => {
-    const salt = 12
-    const sut = new BcryptAdapter(salt)
-    const encryptSpy = jest.spyOn(bcrypt, 'hash')
+    const { sut } = makeSut()
     const password = 'any_password'
     const hash = await sut.encrypt(password)
     expect(hash).toBe(password)
