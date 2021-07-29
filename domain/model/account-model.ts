@@ -1,5 +1,8 @@
 import { AddAccountModel } from '../usercases/add-account-model'
 
-export interface AccountModel extends AddAccountModel {
+export interface AccountModel {
   id: string
+  name: string
+  password: string
+  email: string
 }
