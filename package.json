@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "fast-glob": "^3.2.7",
     "mongodb": "^3.6.3"
   }
 }
