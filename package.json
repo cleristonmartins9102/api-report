@@ -37,6 +37,6 @@
     "validator": "^13.6.0"
   },
   "dependencies": {
-    "mongodb": "^4.0.1"
+    "mongodb": "^3.6.3"
   }
 }
