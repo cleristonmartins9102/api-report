@@ -12,17 +12,17 @@ describe('SignUpRoute', () => {
   })
 
   beforeEach(async () => {
-    const mongoCollection = mongoHelper.getCollection('accounts')
+    const mongoCollection = await mongoHelper.getCollection('accounts')
     await mongoCollection.deleteMany({})
   })
 
   test('Should return an account on success', async () => {
     await request(app)
-      .get('/api/signup')
+      .post('/api/signup')
       .send(
         {
-          nome: 'cleriston',
-          email: 'valid_email',
+          name: 'cleriston',
+          email: 'valid_email@gmail.com',
           password: 'valid_password',
           passwordConfirm: 'valid_password'
         }
