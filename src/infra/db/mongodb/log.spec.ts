@@ -1,0 +1,26 @@
+import { mongoHelper } from './helper/mongo-helper'
+import { Collection } from 'mongodb'
+import { LogMongoRepository } from './log'
+
+describe('Log Mongo DB', () => {
+  let errorCollection: Collection
+  beforeAll(async () => {
+    await mongoHelper.connect()
+  })
+
+  afterAll(async () => {
+    await mongoHelper.close()
+  })
+
+  beforeEach(async () => {
+    errorCollection = await mongoHelper.getCollection('errors')
+    await errorCollection.deleteMany({})
+  })
+
+  test('Should create an error log on success', async () => {
+    const sut = new LogMongoRepository()
+    await sut.logError('any_error')
+    const count = await errorCollection.countDocuments()
+    expect(count).toBe(1)
+  })
+})
