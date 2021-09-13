@@ -155,4 +155,14 @@ describe('DBAuthentication UseCase', () => {
     )
     expect(promise).rejects.toThrow()
   })
+
+  test('Should ensure returns token on success', async () => {
+    const { email, password } = makeFakeAccount()
+    const { sut } = makeSut()
+    const accessToken = await sut.auth(
+      email,
+      password
+    )
+    expect(accessToken).toBe('hash_token')
+  })
 })
