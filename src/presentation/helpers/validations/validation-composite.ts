@@ -1,5 +1,3 @@
-import { MissingParamError } from '../../erros'
-import { badRequest } from '../http-helpers'
 import { Validation } from '../validations'
 
 export class ValidationComposite implements Validation {

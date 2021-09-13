@@ -1,5 +1,5 @@
 import { MissingParamError } from '../../erros'
-import { badRequest, ok, serverError, unauthorizedErrorError } from '../../helpers/http-helpers'
+import { badRequest, ok, serverError, unauthorizedErrorError } from '../../helpers/http/http-helpers'
 import { Controller, HttpRequest, HttpResponse, Authentication, EmailValidator } from './login-protocols'
 import { InvalidParamError } from '../../erros/invalid-param-error'
 

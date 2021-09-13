@@ -1,13 +1,19 @@
 import { Validation } from '../../presentation/helpers/validations'
-import { RequiredFieldValidation } from '../../presentation/helpers/validators/required-field-validation'
-import { ValidationComposite } from '../../presentation/helpers/validators/validation-composite'
+import { CompareFieldsValidation } from '../../presentation/helpers/validations/compare-fields-validation'
+import { EmailValidation } from '../../presentation/helpers/validations/email-validation'
+import { RequiredFieldValidation } from '../../presentation/helpers/validations/required-field-validation'
+import { ValidationComposite } from '../../presentation/helpers/validations/validation-composite'
+import { EmailValidatorAdapter } from '../../presentation/uteis/email-validator-adapter'
 
 export const makeSignUpValidation = (): Validation => {
-  const fields: Validation[] = []
+  const emailValidator = new EmailValidatorAdapter()
+  const validators: Validation[] = []
   const requiredFields = ['name', 'email', 'password', 'passwordConfirm']
   for (const field of requiredFields) {
-    fields.push(new RequiredFieldValidation(field))
+    validators.push(new RequiredFieldValidation(field))
   }
-  const composite = new ValidationComposite(fields)
+  validators.push(new CompareFieldsValidation('password', 'passwordConfirm'))
+  validators.push(new EmailValidation(emailValidator))
+  const composite = new ValidationComposite(validators)
   return composite
 }
