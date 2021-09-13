@@ -4,6 +4,7 @@ import { LoadAuthenticationByEmailRepository } from '../../protocols/db/load-aut
 import { AccountModel, AddAccount } from '../add-account/db-account-protocols'
 import { DbAuthentication } from './db-authentication'
 import { AddAccountModel } from '../../../../domain/usercases/add-account-model'
+import { TokenGenerator } from '../../protocols/criptography/token-generator'
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
@@ -15,6 +16,7 @@ const makeFakeAccount = (): AccountModel => ({
 type SutTypes = {
   loadAccountByEmailRepositoryStub: LoadAuthenticationByEmailRepository
   hashCompareStub: HashComparer
+  tokenGenerator: TokenGenerator
   sut: Authentication
 }
 
@@ -38,14 +40,26 @@ const makeCompareHash = (): any => {
   return new HashComparerStub()
 }
 
+const makeTokenGenerator = (): any => {
+  class TokenGeneratorStub implements TokenGenerator {
+    async generate (id: string): Promise<string> {
+      return 'hash_token'
+    }
+  }
+
+  return new TokenGeneratorStub()
+}
+
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAuthenticationByEmailStub()
   const hashCompareStub = makeCompareHash()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub)
+  const tokenGenerator = makeTokenGenerator()
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub, tokenGenerator)
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hashCompareStub
+    hashCompareStub,
+    tokenGenerator
   }
 }
 
@@ -118,5 +132,16 @@ describe('DBAuthentication UseCase', () => {
       password
     )
     expect(hash).toBeNull()
+  })
+
+  test('Should ensure DbAuthentication calls TokenGenerator with correct id', async () => {
+    const { email, password } = makeFakeAccount()
+    const { sut, tokenGenerator } = makeSut()
+    const tokenGeneratorSpy = jest.spyOn(tokenGenerator, 'generate')
+    await sut.auth(
+      email,
+      password
+    )
+    expect(tokenGeneratorSpy).toBeCalledWith(makeFakeAccount().id)
   })
 })
