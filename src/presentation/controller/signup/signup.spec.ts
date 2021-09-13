@@ -6,7 +6,7 @@ import { AddAccount } from '../../../../domain/usercases/add-account'
 import { AccountModel } from '../../../../domain/model/account-model'
 import { HttpRequest } from '../../protocols'
 import { badRequest, ok, serverError } from '../../helpers/http/http-helpers'
-import { Validation } from '../../helpers/validations'
+import { Validation } from '../../protocols/validations'
 
 interface SutTypes {
   sut: SignUpController
