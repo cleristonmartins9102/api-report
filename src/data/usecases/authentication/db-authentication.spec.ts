@@ -188,4 +188,15 @@ describe('DBAuthentication UseCase', () => {
     )
     expect(spy).toBeCalledWith(id, 'hash_token')
   })
+
+  test('Should throw if UpdateTokenRepository throw', async () => {
+    const { email, password } = makeFakeAccount()
+    const { sut, updateAccessToken } = makeSut()
+    jest.spyOn(updateAccessToken, 'update').mockResolvedValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.auth(
+      email,
+      password
+    )
+    expect(promise).rejects.toThrow()
+  })
 })
