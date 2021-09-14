@@ -1,19 +1,19 @@
-import { Encrypter, AddAccountModel, AddAccountRepository, AccountModel } from './db-account-protocols'
+import { Hasher, AddAccountModel, AddAccountRepository, AccountModel } from './db-account-protocols'
 import { DbAddAccount } from './db-add-account'
 
 type SutType = {
   sut: DbAddAccount
-  encripterStub: Encrypter
+  encripterStub: Hasher
   addAccountRepository: any
 }
 
-const makeEncrypter = (): Encrypter => {
-  class EncryptStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
+const makeEncrypter = (): Hasher => {
+  class HasherStub implements Hasher {
+    async hash (value: string): Promise<string> {
       return new Promise(resolve => resolve('encripted_password'))
     }
   }
-  return new EncryptStub()
+  return new HasherStub()
 }
 
 const makeAddAccountRepository = (): AddAccountRepository => {
@@ -54,14 +54,14 @@ const makeFakeAccountData = (): AddAccountModel => (
 )
 
 describe('DbAddAccount Usecase', () => {
-  test('Should call Encrypter with correct', async () => {
+  test('Should call Hasher with correct', async () => {
     const { sut, encripterStub } = makeSut()
-    const encryptSpy = jest.spyOn(encripterStub, 'encrypt')
+    const encryptSpy = jest.spyOn(encripterStub, 'hash')
     await sut.add(makeFakeAccountData())
     expect(encryptSpy).toBeCalledWith('valid_password')
   })
 
-  test('Should throw if Encrypter throws', async () => {
+  test('Should throw if Hasher throws', async () => {
     const { sut, encripterStub } = makeSut()
     jest.spyOn(sut, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.add(makeFakeAccountData())
@@ -81,7 +81,7 @@ describe('DbAddAccount Usecase', () => {
     )
   })
 
-  test('Should throw if Encrypter throws', async () => {
+  test('Should throw if Hasher throws', async () => {
     const { sut, encripterStub } = makeSut()
     jest.spyOn(sut, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const accountData = {
