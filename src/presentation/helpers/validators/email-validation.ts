@@ -1,18 +1,20 @@
 import { InvalidParamError } from '../../erros'
+import { EmailValidator } from '../../protocols/email-validator'
 import { Validation } from '../../protocols/validations'
 
-export class CompareFieldsValidation implements Validation {
+export class EmailValidation implements Validation {
   private readonly fieldName: string
   private readonly fieldToCompareName: string
+  private readonly emailValidator: any
 
-  constructor (fieldName: string, fieldToCompareName: string) {
-    this.fieldName = fieldName
-    this.fieldToCompareName = fieldToCompareName
+  constructor (emailvalidator: EmailValidator) {
+    this.emailValidator = emailvalidator
   }
 
   validate (input: any): Error | null {
-    if (input[this.fieldName] !== input[this.fieldToCompareName]) {
-      return new InvalidParamError(this.fieldToCompareName)
+    const isValid = this.emailValidator.isValid(input.email)
+    if (!isValid) {
+      return new InvalidParamError('email')
     }
     return null
   }
