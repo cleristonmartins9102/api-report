@@ -1,6 +1,6 @@
 import { Authentication } from '../../../../domain/usercases/authentication'
 import { HashComparer } from '../../protocols/criptography/hash-comparer'
-import { LoadAuthenticationByEmailRepository } from '../../protocols/db/load-authentication-by-email-repository'
+import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { AccountModel } from '../add-account/db-account-protocols'
 import { DbAuthentication } from './db-authentication'
 import { UpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository'
@@ -14,15 +14,15 @@ const makeFakeAccount = (): AccountModel => ({
 })
 
 type SutTypes = {
-  loadAccountByEmailRepositoryStub: LoadAuthenticationByEmailRepository
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashComparer
   encrypter: Encrypter
   sut: Authentication
   updateAccessToken: UpdateAccessTokenRepository
 }
 
-const makeLoadAuthenticationByEmailStub = (): LoadAuthenticationByEmailRepository => {
-  class LoadAccountByEmailRepositoryStub implements LoadAuthenticationByEmailRepository {
+const makeLoadAuthenticationByEmailStub = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
       const account: AccountModel = makeFakeAccount()
       return new Promise(resolve => resolve(account))
@@ -107,7 +107,6 @@ describe('DBAuthentication UseCase', () => {
       email,
       password
     )
-    console.log(accessToken)
     expect(accessToken).toBeNull()
   })
 

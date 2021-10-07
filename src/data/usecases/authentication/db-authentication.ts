@@ -1,16 +1,16 @@
 import { Authentication } from '../../../../domain/usercases/authentication'
 import { HashComparer } from '../../protocols/criptography/hash-comparer'
 import { Encrypter } from '../../protocols/criptography/encrypter'
-import { LoadAuthenticationByEmailRepository } from '../../protocols/db/load-authentication-by-email-repository'
+import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { UpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository'
 
 export class DbAuthentication implements Authentication {
-  private readonly loadAuthenticationRepository: LoadAuthenticationByEmailRepository
+  private readonly loadAuthenticationRepository: LoadAccountByEmailRepository
   private readonly hashCompare: HashComparer
   private readonly encrypter: Encrypter
   private readonly updateAccessToken: UpdateAccessTokenRepository
 
-  constructor (loadAuthenticationRepository: LoadAuthenticationByEmailRepository, hashCompare: HashComparer, encrypter: Encrypter, updateAccessTokenRepository: UpdateAccessTokenRepository) {
+  constructor (loadAuthenticationRepository: LoadAccountByEmailRepository, hashCompare: HashComparer, encrypter: Encrypter, updateAccessTokenRepository: UpdateAccessTokenRepository) {
     this.loadAuthenticationRepository = loadAuthenticationRepository
     this.hashCompare = hashCompare
     this.encrypter = encrypter
