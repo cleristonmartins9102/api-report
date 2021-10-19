@@ -4,9 +4,10 @@ import { Controller, HttpRequest, HttpResponse, Authentication, EmailValidator }
 import { InvalidParamError } from '../../erros/invalid-param-error'
 
 export class LoginController implements Controller {
-  private readonly emailValidator: EmailValidator
-  private readonly authentication: Authentication
-  constructor (emailValidator: EmailValidator, authentication: Authentication) {
+  constructor (
+    private readonly emailValidator: EmailValidator,
+    private readonly authentication: Authentication
+  ) {
     this.emailValidator = emailValidator
     this.authentication = authentication
   }

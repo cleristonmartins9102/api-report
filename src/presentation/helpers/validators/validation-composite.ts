@@ -1,8 +1,7 @@
 import { Validation } from '../../protocols/validations'
 
 export class ValidationComposite implements Validation {
-  private readonly validations
-  constructor (validations: Validation[]) {
+  constructor (private readonly validations: Validation[]) {
     this.validations = validations
   }
 
