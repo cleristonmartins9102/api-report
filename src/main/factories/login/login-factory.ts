@@ -8,7 +8,7 @@ import { BcryptAdapter } from '../../../infra/criptography/bcrypt-adapter/bcrypt
 import { JwtAdapter } from '../../../infra/jwt-adapter/jwt-adapter'
 import { LogMongoRepository } from '../../../infra/db/mongodb/log/log-mongo-repository'
 
-export const makeSignUpController = (): Controller => {
+export const makeLoginController = (): Controller => {
   const salt = 12
   const validator = makeLoginValidation()
   const bcryptAdapter = new BcryptAdapter(salt)
