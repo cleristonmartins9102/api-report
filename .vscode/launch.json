@@ -8,7 +8,7 @@
       "type": "node",
       "request": "attach",
       "name": "Docker: Attach to Node",
-      "remoteRoot": "/home/cleriston/Documents/Courses/node",
+      "remoteRoot": "/usr/src/clean-arc",
       "restart": true,
       "port": 9222
     }

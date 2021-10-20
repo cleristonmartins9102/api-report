@@ -11,7 +11,7 @@ export default (app: Express): void => {
   // })
   const dir = path.join(__dirname, '../routes')
   readdirSync(dir).map(async file => {
-    if (file.includes('-routes.ts')) {
+    if (!file.endsWith('.map')) {
       (await import(`../routes/${file}`)).default(router)
     }
   })
