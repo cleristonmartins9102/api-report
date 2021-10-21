@@ -1,11 +1,11 @@
-import { InvalidParamError, MissingParamError, ServerError } from '../../erros'
+import { EmailInUseError, InvalidParamError, MissingParamError, ServerError } from '../../erros'
 import { EmailValidator } from '../../protocols/email-validator'
 import { SignUpController } from './signup-controller'
 import { AddAccountModel } from '../../../domain/usercases/add-account-model'
 import { AddAccount } from '../../../domain/usercases/add-account'
 import { AccountModel } from '../../../domain/model/account-model'
 import { HttpRequest } from '../../protocols'
-import { badRequest, ok, serverError } from '../../helpers/http/http-helpers'
+import { badRequest, forbidden, ok, serverError } from '../../helpers/http/http-helpers'
 import { Validation } from '../../protocols/validations'
 import { Authentication } from '../login/login-controller-protocols'
 
@@ -143,6 +143,13 @@ describe('Signup  Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(ok({ accessToken: 'token' }))
+  })
+
+  test('Should return 403 if email is already in use', async () => {
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockReturnValue(new Promise(resolve => resolve(null as any)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError(makeFakeRequest().body.email)))
   })
 
   test('Should call Validation with corret data', async () => {
