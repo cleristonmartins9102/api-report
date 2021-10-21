@@ -29,7 +29,7 @@ export class LoginController implements Controller {
       if (!authResponse) {
         return unauthorizedErrorError()
       }
-      return ok({ accessToken: 'My To' })
+      return ok({ accessToken: authResponse })
     } catch (err) {
       return serverError(err)
     }
