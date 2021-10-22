@@ -10,11 +10,14 @@ jobs:
   build:
     docker:
       - image: circleci/node:12
+    working_directory: ~/project
+    
     steps:
       - run:
           name: Installing dependences
           command: |
             npm install
+      - run: cp 
       - run:
           name: Testing
           command: |
