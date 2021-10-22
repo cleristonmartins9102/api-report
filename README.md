@@ -1,1 +1,2 @@
+[![CircleCI](https://circleci.com/gh/cleristonmartins9102/api-report/tree/master.svg?style=svg)](https://circleci.com/gh/cleristonmartins9102/api-report/tree/master)
 [![Coverage Status](https://coveralls.io/repos/github/cleristonmartins9102/api-report/badge.svg?branch=master)](https://coveralls.io/github/cleristonmartins9102/api-report?branch=master)
