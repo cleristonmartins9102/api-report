@@ -1,14 +1,26 @@
-orbs: # declare what orbs we are going to use
-  node: circleci/node@2.0.2 # the node orb provides common node-related configuration
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
 
-version: 2.1 # using 2.1 provides access to orbs and other features
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  node: circleci/node@4.7
 
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - run:
+          name: Installing dependences
+          command: |
+            npm install
+      - run:
+          name: Testing
+          command: |
+            npm run test:coveralls
 workflows:
-  matrix-tests:
-    jobs:
-      - node/test:
-          version: 13.11.0
-      - node/test:
-          version: 12.16.0
-      - node/test:
-          version: 10.19.0
+    build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
+      # Inside the workflow, you define the jobs you want to run.
+      jobs:
+        - build
