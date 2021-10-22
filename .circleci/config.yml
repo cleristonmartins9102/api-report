@@ -6,10 +6,25 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12
+
+    working_directory: ~/project
+
+    steps:
+      - run:
+          name: Installing dependences
+          command: |
+            npm install
+      - run:
+          name: Testing
+          command: |
+            npm run test:coveralls
+            
 workflows:
-  build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - 'test:coveralls'
+    build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
+      # Inside the workflow, you define the jobs you want to run.
+      jobs:
+        - build
