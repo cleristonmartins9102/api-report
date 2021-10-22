@@ -14,6 +14,7 @@ jobs:
     working_directory: ~/project
 
     steps:
+      - checkout:
       - run:
           name: Installing dependences
           command: |
