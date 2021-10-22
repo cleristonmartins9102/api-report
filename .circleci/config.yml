@@ -6,10 +6,18 @@ version: 2.1
 orbs:
   node: circleci/node@4.7
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+jobs:
+  build:
+    docker:
+      - image: alpine:3.7
+    steps:
+      - run:
+          name: The First Step
+          command: |
+            echo 'Hello World!'
+            echo 'This is the delivery pipeline'
 workflows:
-  build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - 'npm run test:coveralls'
+    build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
+      # Inside the workflow, you define the jobs you want to run.
+      jobs:
+        - build
