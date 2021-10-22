@@ -10,6 +10,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:12
+
     working_directory: ~/project
 
     steps:
@@ -21,6 +22,7 @@ jobs:
           name: Testing
           command: |
             npm run test:coveralls
+            
 workflows:
     build_and_test: # This is the name of the workflow, feel free to change it to better match your workflow.
       # Inside the workflow, you define the jobs you want to run.
