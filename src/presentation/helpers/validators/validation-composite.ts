@@ -8,6 +8,7 @@ export class ValidationComposite implements Validation {
   validate (input: any): Error | null {
     for (const validation of this.validations) {
       const error = validation.validate(input)
+      /* istanbul ignore next */
       if (error) {
         return error
       }
