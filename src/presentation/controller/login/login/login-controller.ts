@@ -1,7 +1,7 @@
-import { MissingParamError } from '../../erros'
-import { badRequest, ok, serverError, unauthorizedErrorError } from '../../helpers/http/http-helpers'
+import { MissingParamError } from '../../../erros'
+import { badRequest, ok, serverError, unauthorizedErrorError } from '../../../helpers/http/http-helpers'
 import { Controller, HttpRequest, HttpResponse, Authentication, EmailValidator } from './login-controller-protocols'
-import { InvalidParamError } from '../../erros/invalid-param-error'
+import { InvalidParamError } from '../../../erros/invalid-param-error'
 
 export class LoginController implements Controller {
   constructor (
