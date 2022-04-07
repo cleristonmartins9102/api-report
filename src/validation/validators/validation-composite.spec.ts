@@ -1,4 +1,4 @@
-import { MissingParamError } from '../../erros'
+import { MissingParamError } from '../../presentation/erros'
 import { ValidationComposite } from './validation-composite'
 
 describe('Validation Composite', () => {

@@ -1,5 +1,5 @@
-import { InvalidParamError } from '../../erros'
-import { Validation } from '../../protocols/validations'
+import { InvalidParamError } from '../../presentation/erros'
+import { Validation } from '../../presentation/protocols/validations'
 import { CompareFieldsValidation } from './compare-fields-validation'
 type SutTypes = {
   sut: Validation
