@@ -1,5 +1,5 @@
 import { AddSurveyController } from './add-survey-controller'
-import { HttpRequest } from './add-survey-controller-protocols'
+import { HttpRequest, AddSurvey } from './add-survey-controller-protocols'
 import { Validation } from '../../../protocols/validations'
 import { Controller } from '../../../protocols/controller'
 import { badRequest } from '../../../helpers/http/http-helpers'
@@ -7,6 +7,7 @@ import { badRequest } from '../../../helpers/http/http-helpers'
 type SutType = {
   sut: Controller
   validationStub: Validation
+  addSurveyStub: AddSurvey
 }
 
 const makeHttpRequest = (): HttpRequest => (
@@ -30,12 +31,23 @@ const makeValidationStub = (): Validation => {
   return new ValidationStub()
 }
 
+const makeAddSurveyStub = (): AddSurvey => {
+  class AddSurveyStub implements AddSurvey {
+    async add (data: any): Promise<void> {
+      return Promise.resolve()
+    }
+  }
+  return new AddSurveyStub()
+}
+
 const makeSut = (): SutType => {
   const validationStub = makeValidationStub()
-  const sut = new AddSurveyController(validationStub)
+  const addSurveyStub = makeAddSurveyStub()
+  const sut = new AddSurveyController(validationStub, addSurveyStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addSurveyStub
   }
 }
 
@@ -48,11 +60,19 @@ describe('AddSurvey Controller', () => {
     expect(validationStubSpy).toBeCalledWith(httpRequest.body)
   })
 
-  test('Ensure Validation return 400 if fails', async () => {
+  test('Ensure Validation returns 400 if fails', async () => {
     const { sut, validationStub } = makeSut()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
     const httpRequest = makeHttpRequest()
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call AddSurvey with correct values', async () => {
+    const { sut, addSurveyStub } = makeSut()
+    const addSurveyStubSpy = jest.spyOn(addSurveyStub, 'add')
+    const httpRequest = makeHttpRequest()
+    await sut.handle(httpRequest)
+    expect(addSurveyStubSpy).toBeCalledWith(httpRequest.body)
   })
 })
