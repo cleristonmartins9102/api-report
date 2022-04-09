@@ -1,9 +1,9 @@
-interface AddSurveyModel {
+export interface AddSurveyModel {
   question: string
   answers: SurveyAnswer[]
 }
 
-interface SurveyAnswer {
+export interface SurveyAnswer {
   image: string
   answer: string
 }
