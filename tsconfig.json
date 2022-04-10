@@ -10,7 +10,7 @@
     },
     "include": [
         "src"
-    ],
+, "src/presentation/erros/.ts"    ],
     "exclude": [
         "**/*.spec.ts",
         "**/*.test.ts"
