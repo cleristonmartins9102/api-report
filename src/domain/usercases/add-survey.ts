@@ -1,6 +1,7 @@
 export interface AddSurveyModel {
   question: string
   answers: SurveyAnswer[]
+  created_at: any
 }
 
 export interface SurveyAnswer {

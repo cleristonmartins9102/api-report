@@ -3,6 +3,7 @@ import app from '../config/app'
 import { mongoHelper } from '../../infra/db/mongodb/helper/mongo-helper'
 import { Collection } from 'mongodb'
 import { sign, verify } from 'jsonwebtoken'
+import MockDate from 'mockdate'
 
 let surveyCollection: Collection
 let accountCollection: Collection
@@ -10,10 +11,12 @@ let accountCollection: Collection
 // describe('Survey Routes', () => {
 describe('POST /surveys', () => {
   beforeAll(async () => {
+    MockDate.set(new Date())
     await mongoHelper.connect()
   })
 
   afterAll(async () => {
+    MockDate.reset()
     await mongoHelper.close()
   })
 
@@ -39,7 +42,8 @@ describe('POST /surveys', () => {
               image: 'any_image2',
               answer: 'any_answer2'
             }
-          ]
+          ],
+          created_at: new Date()
         }
       )
       .expect(403)
@@ -69,7 +73,8 @@ describe('POST /surveys', () => {
               image: 'any_image2',
               answer: 'any_answer2'
             }
-          ]
+          ],
+          created_at: new Date()
         }
       )
       .expect(204)

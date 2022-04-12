@@ -3,6 +3,7 @@ import { HttpRequest, AddSurvey } from './add-survey-controller-protocols'
 import { Validation } from '../../../protocols/validations'
 import { Controller } from '../../../protocols/controller'
 import { badRequest, serverError, noContent } from '../../../helpers/http/http-helpers'
+import MockDate from 'mockdate'
 
 type SutType = {
   sut: Controller
@@ -17,7 +18,8 @@ const makeHttpRequest = (): HttpRequest => (
       answers: [{
         image: 'any_image',
         answer: 'any_answer'
-      }]
+      }],
+      created_at: new Date()
     }
   }
 )
@@ -50,6 +52,14 @@ const makeSut = (): SutType => {
     addSurveyStub
   }
 }
+
+beforeAll(() => {
+  MockDate.set(new Date())
+})
+
+afterAll(() => {
+  MockDate.reset()
+})
 
 describe('AddSurvey Controller', () => {
   test('Should call Validation with correct values', async () => {

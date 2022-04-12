@@ -2,6 +2,7 @@ import { mongoHelper } from '../helper/mongo-helper'
 import { Collection } from 'mongodb'
 import { AddSurveyRepository } from '../../../../data/protocols/db/survey/add-survey-repository'
 import { SurveyMongoRepository } from './survey-mongo-repository'
+import MockDate from 'mockdate'
 
 let surveyCollection: Collection
 
@@ -17,10 +18,12 @@ const makeSut = (): SutTypes => {
 
 describe('Survey MongoRepository', () => {
   beforeAll(async () => {
+    MockDate.set(new Date())
     await mongoHelper.connect()
   })
 
   afterAll(async () => {
+    MockDate.reset()
     await mongoHelper.close()
   })
 
@@ -42,7 +45,8 @@ describe('Survey MongoRepository', () => {
           image: 'any_image2',
           answer: 'any_anzswer2'
         }
-      ]
+      ],
+      created_at: new Date()
     })
     const survey = await surveyCollection.findOne({ question: 'any_question' })
     expect(survey).toBeTruthy()
