@@ -67,7 +67,42 @@ describe('Account MongoRepository', () => {
         accessToken: 'any_token'
       })
       const account = await sut.loadByToken('any_token')
-      console.log(account)
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@email.com')
+      expect(account.password).toBe('password')
+    })
+
+    test('Should return an account on loadByToken with admin role', async () => {
+      const sut = new AccountMongoRepository()
+      mongoCollection = await mongoHelper.getCollection('accounts')
+      await mongoCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'password',
+        accessToken: 'any_token',
+        role: 'admin'
+      })
+      const account = await sut.loadByToken('any_token', 'admin')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@email.com')
+      expect(account.password).toBe('password')
+    })
+
+    test('Should return an account on loadByToken with if user is an admin', async () => {
+      const sut = new AccountMongoRepository()
+      mongoCollection = await mongoHelper.getCollection('accounts')
+      await mongoCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'password',
+        accessToken: 'any_token',
+        role: 'admin'
+      })
+      const account = await sut.loadByToken('any_token')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
@@ -75,6 +110,7 @@ describe('Account MongoRepository', () => {
       expect(account.password).toBe('password')
     })
   })
+
   describe('UpdateAccessToken()', () => {
     test('Should update the account accessToken on updateAccessToken success', async () => {
       const sut = new AccountMongoRepository()
