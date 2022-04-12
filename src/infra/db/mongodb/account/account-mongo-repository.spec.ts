@@ -67,6 +67,7 @@ describe('Account MongoRepository', () => {
         accessToken: 'any_token'
       })
       const account = await sut.loadByToken('any_token')
+      console.log(account)
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
