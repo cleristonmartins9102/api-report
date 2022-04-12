@@ -5,7 +5,8 @@ import { Collection } from 'mongodb'
 
 let surveyCollection: Collection
 
-describe('Survey Routes', () => {
+// describe('Survey Routes', () => {
+describe('POST /surveys', () => {
   beforeAll(async () => {
     await mongoHelper.connect()
   })
@@ -14,31 +15,30 @@ describe('Survey Routes', () => {
     await mongoHelper.close()
   })
 
-  beforeEach(async () => {
-    surveyCollection = await mongoHelper.getCollection('survey')
+  afterEach(async () => {
+    surveyCollection = await mongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
   })
 
-  describe('POST /survey', () => {
-    test('Should return 204 on add survey', async () => {
-      await request(app)
-        .post('/api/survey')
-        .send(
-          {
-            question: 'Question',
-            answers: [
-              {
-                image: 'any_image1',
-                answer: 'any_answer1'
-              },
-              {
-                image: 'any_image2',
-                answer: 'any_answer2'
-              }
-            ]
-          }
-        )
-        .expect(204)
-    })
+  test('Should return 403 on add surveys on success', async () => {
+    await request(app)
+      .post('/api/surveys')
+      .send(
+        {
+          question: 'Question',
+          answers: [
+            {
+              image: 'any_image1',
+              answer: 'any_answer1'
+            },
+            {
+              image: 'any_image2',
+              answer: 'any_answer2'
+            }
+          ]
+        }
+      )
+      .expect(403)
   })
 })
+// })
