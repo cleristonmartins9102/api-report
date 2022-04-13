@@ -1,4 +1,5 @@
 import { HttpRequest, HttpResponse, Controller, LoadSurvey } from './load-survey-protocols'
+import { ok } from '../../../helpers/http/http-helpers'
 
 export class LoadSurveyController implements Controller {
   constructor (
@@ -6,7 +7,7 @@ export class LoadSurveyController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.loadSurvey.load()
-    return Promise.resolve(null as any)
+    const surveys = await this.loadSurvey.load()
+    return ok(surveys)
   }
 }
