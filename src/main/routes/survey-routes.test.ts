@@ -57,7 +57,7 @@ describe('Survey Routes', () => {
         role: 'admin',
         accessToken: 'any_token'
       })
-      const accessToken = sign('any_token', 'secret')
+      const accessToken = sign('any_token', 'any_secret')
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -89,13 +89,13 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 200 on load surveys if token is provided', async () => {
-      const res = await accountCollection.insertOne({
+      await accountCollection.insertOne({
         name: 'cleriston',
         email: 'valid_email@gmail.com',
         password: 'any_secret',
         accessToken: 'any_token'
       })
-      const accessToken = sign('any_token', 'secret')
+      const accessToken = sign('any_token', 'any_secret')
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
