@@ -88,35 +88,18 @@ describe('Survey Routes', () => {
         .expect(403)
     })
 
-    // test('Should return 204 on add surveys on success', async () => {
-    //   const res = await accountCollection.insertOne({
-    //     name: 'cleriston',
-    //     email: 'valid_email@gmail.com',
-    //     password: 'any_secret',
-    //     role: 'admin',
-    //     accessToken: 'any_token'
-    //   })
-    //   const accessToken = sign('any_token', 'secret')
-    //   await request(app)
-    //     .post('/api/surveys')
-    //     .set('x-access-token', accessToken)
-    //     .send(
-    //       {
-    //         question: 'Question',
-    //         answers: [
-    //           {
-    //             image: 'any_image1',
-    //             answer: 'any_answer1'
-    //           },
-    //           {
-    //             image: 'any_image2',
-    //             answer: 'any_answer2'
-    //           }
-    //         ],
-    //         created_at: new Date()
-    //       }
-    //     )
-    //     .expect(204)
-    // })
+    test('Should return 200 on load surveys if token is provided', async () => {
+      const res = await accountCollection.insertOne({
+        name: 'cleriston',
+        email: 'valid_email@gmail.com',
+        password: 'any_secret',
+        accessToken: 'any_token'
+      })
+      const accessToken = sign('any_token', 'secret')
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
