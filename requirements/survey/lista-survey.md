@@ -3,7 +3,7 @@
 ## Success Case
 1. ⛔ Receives a **GET** request on the route **api/survey**
 2. ⛔ Check if the request owner is a user
-3. ⛔ Returns 204 if no any poll
+3. ✅ Returns 204 if no any poll
 4. ✅ Returns 200 with the poll data
 
 ## Exception

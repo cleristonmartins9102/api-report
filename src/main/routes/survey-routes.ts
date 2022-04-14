@@ -6,5 +6,7 @@ import { middlewareAdapter } from '../../infra/adapters/express-middleware-adapt
 
 export default (router: Router): void => {
   const authAdmin = middlewareAdapter(makeAuthMiddleware('admin'))
+  const auth = middlewareAdapter(makeAuthMiddleware())
   router.post('/surveys', authAdmin, routeAdapter(makeSurveyController()))
+  router.get('/surveys', auth, routeAdapter(makeSurveyController()))
 }
