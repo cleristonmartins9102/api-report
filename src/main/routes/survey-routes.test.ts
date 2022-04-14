@@ -8,6 +8,18 @@ import MockDate from 'mockdate'
 let surveyCollection: Collection
 let accountCollection: Collection
 
+const makeInsertFakeAccount = async (): Promise<string> => {
+  const accessToken = sign('any_token', 'any_secret')
+  await accountCollection.insertOne({
+    name: 'cleriston',
+    email: 'valid_email@gmail.com',
+    password: 'any_secret',
+    role: 'admin',
+    accessToken: accessToken
+  })
+  return accessToken
+}
+
 beforeAll(async () => {
   MockDate.set(new Date())
   await mongoHelper.connect()
@@ -50,14 +62,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on add surveys on success', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'cleriston',
-        email: 'valid_email@gmail.com',
-        password: 'any_secret',
-        role: 'admin',
-        accessToken: 'any_token'
-      })
-      const accessToken = sign('any_token', 'any_secret')
+      const accessToken = await makeInsertFakeAccount()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -89,13 +94,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 200 on load surveys if token is provided', async () => {
-      await accountCollection.insertOne({
-        name: 'cleriston',
-        email: 'valid_email@gmail.com',
-        password: 'any_secret',
-        accessToken: 'any_token'
-      })
-      const accessToken = sign('any_token', 'any_secret')
+      const accessToken = await makeInsertFakeAccount()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)

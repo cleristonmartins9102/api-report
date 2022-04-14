@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
     "start": "npm run build && node ./dist/main/serve.js",
     "dev": "sucrase-node src/main/serve.ts",
     "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy dist/main/serve.js",
