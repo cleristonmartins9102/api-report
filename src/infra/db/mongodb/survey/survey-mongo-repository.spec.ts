@@ -1,9 +1,7 @@
 import { mongoHelper } from '../helper/mongo-helper'
 import { Collection } from 'mongodb'
-import { AddSurveyRepository } from '../../../../data/protocols/db/survey/add-survey-repository'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import MockDate from 'mockdate'
-import { LoadSurveyRepository } from '../../../../data/protocols/db/survey'
 
 let surveyCollection: Collection
 
