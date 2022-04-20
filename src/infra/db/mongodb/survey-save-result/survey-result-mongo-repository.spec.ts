@@ -34,6 +34,9 @@ const makeFakeAddSurveyModel = async (): Promise<SurveyModel> => {
     answers: [
       {
         answer: 'py'
+      },
+      {
+        answer: 'js'
       }
     ],
     created_at: new Date()
@@ -79,6 +82,18 @@ describe('Survey MongoRepository', () => {
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toBeTruthy()
       expect(surveyResult.answer).toBe((survey.answers[0].answer))
+    })
+
+    test('Should update SurveyResult if it is not a new record', async () => {
+      const { sut } = makeSut()
+      const survey = (await makeFakeAddSurveyModel())
+      const saveResultModel = await makeFakeSaveResultModel(survey)
+      const resp = await resultCollection.insertOne(saveResultModel)
+      saveResultModel.answer = survey.answers[1].answer
+      const surveyResult = await sut.save(saveResultModel)
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.id).toEqual(resp.ops[0]._id)
+      expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
 })
