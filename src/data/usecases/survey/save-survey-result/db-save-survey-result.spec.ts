@@ -11,7 +11,7 @@ type SutTypes = {
 
 const makeSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (): Promise<SaveSurveyResultModel> {
+    async save (): Promise<SurveyResultModel> {
       return makeSurveyResultModel()
     }
   }
@@ -53,17 +53,23 @@ afterAll(() => {
 })
 
 describe('Save Survey', () => {
-  test('Shoud call SaveSurveyResultRepository with correct value', async () => {
+  test('Shold call SaveSurveyResultRepository with correct value', async () => {
     const { sut, saveSurveyRepositoryStub } = makeSut()
     const saveSurveyRepoSpy = jest.spyOn(saveSurveyRepositoryStub, 'save')
     await sut.save(makeSaveSurveyResultModel())
     expect(saveSurveyRepoSpy).toBeCalledWith(makeSaveSurveyResultModel())
   })
 
-  test('Shoud throw if SaveSurveyRepository throws', async () => {
+  test('Shold throw if SaveSurveyRepository throws', async () => {
     const { sut, saveSurveyRepositoryStub } = makeSut()
     jest.spyOn(saveSurveyRepositoryStub, 'save').mockReturnValueOnce(Promise.reject(new Error()))
     const response = sut.save(makeSaveSurveyResultModel())
     await expect(response).rejects.toThrow(new Error())
+  })
+
+  test('Shold returns SuveyResult on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.save(makeSaveSurveyResultModel())
+    expect(response).toEqual(makeSurveyResultModel())
   })
 })
