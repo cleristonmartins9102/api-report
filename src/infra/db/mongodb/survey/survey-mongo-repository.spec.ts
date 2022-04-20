@@ -103,5 +103,11 @@ describe('Survey MongoRepository', () => {
       const surveys = await sut.loadById(res.ops[0]._id)
       expect(surveys).toBeTruthy()
     })
+
+    test('Should load surveys by id returns an empty value by id if any value found', async () => {
+      const { sut } = makeSut()
+      const surveys = await sut.loadById(1)
+      expect(surveys).toBeNull()
+    })
   })
 })
