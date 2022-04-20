@@ -1,4 +1,3 @@
-
 import { AccountModel } from '../model/account-model'
 
 export interface LoadAccountByToken {
