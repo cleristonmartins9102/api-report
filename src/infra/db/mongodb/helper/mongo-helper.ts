@@ -25,8 +25,11 @@ export const mongoHelper = {
     return this.connection.db().collection(name)
   },
 
-  map (account: any): AccountModel {
-    const { _id, ...accountWithoudId } = account
-    return { ...accountWithoudId, id: _id }
+  map (data: any): any {
+    const { _id, ...dataWithoudId } = data
+    return { ...dataWithoudId, id: _id }
+  },
+  mapCollection (collection: any[]): any[] {
+    return collection.map(c => mongoHelper.map(c))
   }
 }

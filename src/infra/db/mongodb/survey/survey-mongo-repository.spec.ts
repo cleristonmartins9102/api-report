@@ -72,6 +72,7 @@ describe('Survey MongoRepository', () => {
       const { sut } = makeSut()
       const surveys = await sut.loadAll()
       expect(surveys.length).toBe(1)
+      expect(surveys[0].id).toBeTruthy()
       expect(surveys[0].question).toBe('any_question')
       expect(surveys[0].answers[1].answer).toBe('any_anzswer2')
     })
@@ -102,6 +103,7 @@ describe('Survey MongoRepository', () => {
       const { sut } = makeSut()
       const surveys = await sut.loadById(res.ops[0]._id)
       expect(surveys).toBeTruthy()
+      expect(surveys.id).toBeTruthy()
     })
 
     test('Should load surveys by id returns an empty value by id if any value found', async () => {
