@@ -2,7 +2,7 @@ import { SurveyModel } from '../../../../domain/model/survey-model'
 import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
 import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
 import { InvalidParamError } from '../../../erros'
-import { forbidden, serverError } from '../../../helpers/http/http-helpers'
+import { forbidden, ok, serverError } from '../../../helpers/http/http-helpers'
 import { Controller, HttpRequest, LoadSurveyResultById } from './save-survey-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controler'
 import MockDate from 'mockdate'
@@ -123,5 +123,11 @@ describe('Save Survey Result Controller', () => {
       answer: 'js',
       create_at: new Date()
     })
+  })
+
+  test('Should returns 200 on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.handle(makeFakeHttpRequest())
+    expect(response).toEqual(ok(''))
   })
 })
