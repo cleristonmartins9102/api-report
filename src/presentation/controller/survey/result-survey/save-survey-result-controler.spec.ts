@@ -1,6 +1,6 @@
 import { SurveyModel } from '../../../../domain/model/survey-model'
 import { InvalidParamError } from '../../../erros'
-import { forbidden } from '../../../helpers/http/http-helpers'
+import { forbidden, serverError } from '../../../helpers/http/http-helpers'
 import { Controller, HttpRequest, LoadSurveyResultById } from './save-survey-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controler'
 
@@ -41,28 +41,40 @@ const makeSut = (): SutTypes => {
   }
 }
 
+const makeFakeHttpRequest = (): HttpRequest => ({
+  params: {
+    surveyId: 'any_id'
+  },
+  body: {
+    answer: 'wrong_answer'
+  }
+})
+
 describe('Save Survey Result Controller', () => {
   test('Should call LoadSurveyResultById with correct value', async () => {
-    const httpRequest: HttpRequest = {
-      params: {
-        surveyId: 'any_id'
-      }
-    }
     const { sut, loadSurveyResultByIdStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveyResultByIdStub, 'loadById')
-    await sut.handle(httpRequest)
+    await sut.handle(makeFakeHttpRequest())
     expect(loadSpy).toBeCalledWith('any_id')
   })
 
   test('Should returns 403 if LoadSurveyResultById returns null', async () => {
-    const httpRequest: HttpRequest = {
-      params: {
-        surveyId: 'any_id'
-      }
-    }
     const { sut, loadSurveyResultByIdStub } = makeSut()
     jest.spyOn(loadSurveyResultByIdStub, 'loadById').mockReturnValueOnce(Promise.resolve(null as any))
-    const response = await sut.handle(httpRequest)
+    const response = await sut.handle(makeFakeHttpRequest())
     expect(response).toEqual(forbidden(new InvalidParamError('surveyId')))
+  })
+
+  test('Should returns 500 if LoadSurveyResultById throws', async () => {
+    const { sut, loadSurveyResultByIdStub } = makeSut()
+    jest.spyOn(loadSurveyResultByIdStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const response = await sut.handle(makeFakeHttpRequest())
+    expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('Should returns 403 if has a wrong answer', async () => {
+    const { sut } = makeSut()
+    const response = await sut.handle(makeFakeHttpRequest())
+    expect(response).toEqual(forbidden(new InvalidParamError('answer')))
   })
 })
