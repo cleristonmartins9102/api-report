@@ -7,4 +7,5 @@ export interface HttpRequest {
   body?: any
   header?: any
   params?: any
+  accountId?: any
 }
