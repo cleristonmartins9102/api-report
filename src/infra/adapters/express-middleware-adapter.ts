@@ -9,6 +9,7 @@ export const middlewareAdapter = (middleware: Middleware) => {
     }
     const httpResponse: HttpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
+      req.accountId = httpResponse.body.accountId
       next()
     } else {
       res.status(httpResponse.statusCode).json({
