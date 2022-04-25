@@ -4,13 +4,14 @@ import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import MockDate from 'mockdate'
 import { SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
 import { SurveyModel } from '../../../../domain/model/survey-model'
+import { SaveSurveyResultRepository } from '../../../../data/protocols/db/survey'
 
 let accountCollection: Collection
 let resultCollection: Collection
 let surveyCollection: Collection
 
 type SutTypes = {
-  sut: any
+  sut: SaveSurveyResultRepository
 }
 const makeSut = (): SutTypes => {
   const sut = new SurveyResultMongoRepository()
@@ -19,7 +20,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeFakeAddAccoundModel = async (): Promise<string> => {
+const mockAddAccoundModel = async (): Promise<string> => {
   const res = await accountCollection.insertOne({
     name: 'Cleriston',
     password: '123456',
@@ -28,7 +29,7 @@ const makeFakeAddAccoundModel = async (): Promise<string> => {
   return res.ops[0]._id
 }
 
-const makeFakeAddSurveyModel = async (): Promise<SurveyModel> => {
+const mockAddSurveyModel = async (): Promise<SurveyModel> => {
   const res = await surveyCollection.insertOne({
     question: 'What is language do you prefer?',
     answers: [
@@ -41,13 +42,13 @@ const makeFakeAddSurveyModel = async (): Promise<SurveyModel> => {
     ],
     created_at: new Date()
   })
-  return res.ops[0]
+  return mongoHelper.map(res.ops[0])
 }
 
-const makeFakeSaveResultModel = async (survey: SurveyModel): Promise<SaveSurveyResultModel> => {
+const mockSaveResultModel = async (survey: SurveyModel): Promise<SaveSurveyResultModel> => {
   return {
-    surveyId: (survey as any)._id,
-    accountId: await makeFakeAddAccoundModel(),
+    surveyId: (survey as any).id,
+    accountId: await mockAddAccoundModel(),
     answer: survey.answers[0].answer,
     create_at: new Date()
   }
@@ -76,24 +77,22 @@ describe('Survey MongoRepository', () => {
   describe('Save()', () => {
     test('Should insert new SurveyResult if there is no data with surveyId and accountId', async () => {
       const { sut } = makeSut()
-      const survey = (await makeFakeAddSurveyModel())
-      const saveResultModel = await makeFakeSaveResultModel(survey)
+      const survey = (await mockAddSurveyModel())
+      const saveResultModel = await mockSaveResultModel(survey)
       const surveyResult = await sut.save(saveResultModel)
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answer).toBe((survey.answers[0].answer))
+      expect(surveyResult.answers[0].count).toBe(1)
+      expect(surveyResult.answers[0].answer).toBe((survey.answers[0].answer))
     })
 
     test('Should update SurveyResult if it is not a new record', async () => {
       const { sut } = makeSut()
-      const survey = (await makeFakeAddSurveyModel())
-      const saveResultModel = await makeFakeSaveResultModel(survey)
+      const survey = (await mockAddSurveyModel())
+      const saveResultModel = await mockSaveResultModel(survey)
       const resp = await resultCollection.insertOne(saveResultModel)
       saveResultModel.answer = survey.answers[1].answer
       const surveyResult = await sut.save(saveResultModel)
       expect(surveyResult).toBeTruthy()
-      expect(surveyResult.id).toEqual(resp.ops[0]._id)
-      expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
 })
