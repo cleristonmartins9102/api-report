@@ -31,13 +31,19 @@ const mockAddAccoundModel = async (): Promise<string> => {
 
 const mockAddSurveyModel = async (): Promise<SurveyModel> => {
   const res = await surveyCollection.insertOne({
-    question: 'What is language do you prefer?',
+    question: 'What language do you prefer?',
     answers: [
       {
-        answer: 'py'
+        answer: 'py',
+        image: 'py_img'
       },
       {
-        answer: 'js'
+        answer: 'js',
+        image: 'js_img'
+      },
+      {
+        answer: 'php',
+        image: 'php_img'
       }
     ],
     created_at: new Date()
