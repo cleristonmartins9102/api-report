@@ -23,15 +23,20 @@ const makeFakeLoadSurvey = (): SurveyModel => (
         answer: 'js'
       }
     ],
-    created_at: 'any_date'
+    create_at: 'any_date'
   }
 )
 
 const makeSurveyResultModel = (): SurveyResultModel => ({
-  id: 'any',
   surveyId: 'any_id',
-  accountId: 'any_account',
-  answer: 'js',
+  question: 'any_question',
+  answers: [
+    {
+      answer: 'any',
+      percent: 1,
+      count: 1
+    }
+  ],
   create_at: new Date()
 })
 
@@ -71,9 +76,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
   body: {
     answer: 'js'
   },
-  header: {
-    accountId: 'any_account_id'
-  }
+  accountId: 'any_account_id'
 })
 
 describe('Save Survey Result Controller', () => {
@@ -118,9 +121,9 @@ describe('Save Survey Result Controller', () => {
     const saveSpy = jest.spyOn(saveSurveyResultStub, 'save')
     await sut.handle(makeFakeHttpRequest())
     expect(saveSpy).toBeCalledWith({
-      accountId: 'any_account_id',
-      surveyId: 'any_id',
-      answer: 'js',
+      accountId: makeFakeHttpRequest().accountId,
+      surveyId: makeFakeHttpRequest().params.surveyId,
+      answer: makeFakeHttpRequest().body.answer,
       create_at: new Date()
     })
   })
@@ -128,6 +131,17 @@ describe('Save Survey Result Controller', () => {
   test('Should returns 200 on success', async () => {
     const { sut } = makeSut()
     const response = await sut.handle(makeFakeHttpRequest())
-    expect(response).toEqual(ok(''))
+    expect(response).toEqual(ok({
+      surveyId: makeFakeHttpRequest().params.surveyId,
+      question: makeSurveyResultModel().question,
+      answers: [
+        {
+          answer: 'any',
+          count: 1,
+          percent: 1
+        }
+      ],
+      create_at: new Date()
+    }))
   })
 })
