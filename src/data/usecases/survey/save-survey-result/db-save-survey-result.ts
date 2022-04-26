@@ -1,5 +1,5 @@
 import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
-import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
+import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { SaveSurveyResultRepository } from '../../../protocols/db/survey'
 
 export class DbSaveSurveyResult implements SaveSurveyResult {

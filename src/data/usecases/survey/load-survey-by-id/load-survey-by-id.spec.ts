@@ -1,7 +1,7 @@
 import { SurveyModel } from '../../../../domain/model/survey-model'
 import { LoadSurveyByIdRepository } from '../../../protocols/db/survey/load-survey-by-id-repository'
-import { DbLoadSurveyResultById } from './db-load-survey-by-id'
-import { LoadSurveyResultById } from './load-survey-by-id-protocols'
+import { DbLoadSurveyById } from './db-load-survey-by-id'
+import { LoadSurveyById } from './load-survey-by-id-protocols'
 
 const makeFakeLoadSurvey = (): SurveyModel => (
   {
@@ -18,7 +18,7 @@ const makeFakeLoadSurvey = (): SurveyModel => (
 )
 
 type SutTypes = {
-  sut: LoadSurveyResultById
+  sut: LoadSurveyById
   loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
 }
 
@@ -33,7 +33,7 @@ const makeLoadSurveyByIdRepositoryStub = (): LoadSurveyByIdRepository => {
 
 const makeSut = (): SutTypes => {
   const loadSurveyByIdRepositoryStub = makeLoadSurveyByIdRepositoryStub()
-  const sut = new DbLoadSurveyResultById(loadSurveyByIdRepositoryStub)
+  const sut = new DbLoadSurveyById(loadSurveyByIdRepositoryStub)
   return {
     sut,
     loadSurveyByIdRepositoryStub

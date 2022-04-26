@@ -1,8 +1,8 @@
 import { SurveyMongoRepository } from '../../../../../infra/db/mongodb/survey/survey-mongo-repository'
-import { DbLoadSurveyResultById } from '../../../../../data/usecases/survey/load-survey-by-id/db-load-survey-by-id'
-import { LoadSurveyResultById } from '../../../../../domain/usercases/load-survey-result-by-id'
+import { DbLoadSurveyById } from '../../../../../data/usecases/survey/load-survey-by-id/db-load-survey-by-id'
+import { LoadSurveyById } from '../../../../../domain/usercases/survey/load-survey-by-id'
 
-export const makeDbLoadSurveyById = (): LoadSurveyResultById => {
+export const makeDbLoadSurveyById = (): LoadSurveyById => {
   const surveyMongoRepository = new SurveyMongoRepository()
-  return new DbLoadSurveyResultById(surveyMongoRepository)
+  return new DbLoadSurveyById(surveyMongoRepository)
 }

@@ -1,1 +1,1 @@
-export * from '../../../../domain/usercases/load-survey'
+export * from '../../../../domain/usercases/survey/load-survey'

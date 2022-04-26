@@ -2,7 +2,7 @@ import { mongoHelper } from '../helper/mongo-helper'
 import { Collection } from 'mongodb'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import MockDate from 'mockdate'
-import { SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
+import { SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { SurveyModel } from '../../../../domain/model/survey-model'
 import { SaveSurveyResultRepository } from '../../../../data/protocols/db/survey'
 

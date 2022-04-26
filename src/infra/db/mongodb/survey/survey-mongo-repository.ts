@@ -1,6 +1,6 @@
 import { AddSurveyRepository, LoadSurveyRepository } from '../../../../data/protocols/db/survey'
 import { SurveyModel } from '../../../../domain/model/survey-model'
-import { AddSurveyModel } from '../../../../domain/usercases/add-survey'
+import { AddSurveyModel } from '../../../../domain/usercases/survey/add-survey'
 import { mongoHelper } from '../helper/mongo-helper'
 import { ObjectId } from 'mongodb'
 import { LoadSurveyByIdRepository } from '../../../../data/protocols/db/survey/load-survey-by-id-repository'

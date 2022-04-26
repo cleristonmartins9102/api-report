@@ -2,7 +2,7 @@ import { Controller } from '../../../protocols/controller'
 import { HttpRequest, HttpResponse } from './add-survey-controller-protocols'
 import { Validation } from '../../../protocols/validations'
 import { badRequest, noContent, serverError } from '../../../helpers/http/http-helpers'
-import { AddSurvey } from '../../../../domain/usercases/add-survey'
+import { AddSurvey } from '../../../../domain/usercases/survey/add-survey'
 
 export class AddSurveyController implements Controller {
   constructor (

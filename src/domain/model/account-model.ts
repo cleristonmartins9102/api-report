@@ -1,4 +1,4 @@
-import { AddAccountModel } from '../usercases/add-account-model'
+import { AddAccountModel } from '../usercases/account/add-account-model'
 
 export interface AccountModel {
   id: string

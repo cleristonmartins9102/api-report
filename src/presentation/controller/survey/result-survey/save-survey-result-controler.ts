@@ -1,12 +1,12 @@
 import { Controller, HttpRequest, HttpResponse } from './save-survey-controller-protocols'
-import { LoadSurveyResultById } from '../../../../domain/usercases/load-survey-result-by-id'
+import { LoadSurveyById } from '../../../../domain/usercases/survey/load-survey-by-id'
 import { forbidden, ok, serverError } from '../../../helpers/http/http-helpers'
 import { InvalidParamError } from '../../../erros'
-import { SaveSurveyResult } from '../../../../domain/usercases/save-survey-result'
+import { SaveSurveyResult } from '../../../../domain/usercases/survey-result/save-survey-result'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
-    private readonly loadSurveyResult: LoadSurveyResultById,
+    private readonly loadSurveyById: LoadSurveyById,
     private readonly saveSurveyResult: SaveSurveyResult
   ) {}
 
@@ -15,7 +15,7 @@ export class SaveSurveyResultController implements Controller {
       const { answer } = httpRequest.body
       const { surveyId } = httpRequest.params
       const { accountId } = httpRequest
-      const survey = await this.loadSurveyResult.loadById(surveyId)
+      const survey = await this.loadSurveyById.loadById(surveyId)
       if (survey) {
         const ansFind = survey.answers.filter(a => a.answer === answer)
         if (ansFind.length === 0) {

@@ -1,15 +1,16 @@
 import { SurveyModel } from '../../../../domain/model/survey-model'
 import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
-import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
+import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { InvalidParamError } from '../../../erros'
 import { forbidden, ok, serverError } from '../../../helpers/http/http-helpers'
-import { Controller, HttpRequest, LoadSurveyResultById } from './save-survey-controller-protocols'
+import { Controller, HttpRequest } from './save-survey-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controler'
 import MockDate from 'mockdate'
+import { LoadSurveyById } from '../../../../domain/usercases/survey/load-survey-by-id'
 
 type SutTypes = {
   sut: Controller
-  loadSurveyResultByIdStub: LoadSurveyResultById
+  loadSurveyResultByIdStub: LoadSurveyById
   saveSurveyResultStub: SaveSurveyResult
 }
 
@@ -40,10 +41,10 @@ const makeSurveyResultModel = (): SurveyResultModel => ({
   create_at: new Date()
 })
 
-const makeLoadSurveyByIdStub = (): LoadSurveyResultById => {
-  class LoadSurveyResultByIdStub implements LoadSurveyResultById {
-    async loadById (id: string): Promise<SurveyResultModel> {
-      return Promise.resolve(makeSurveyResultModel())
+const makeLoadSurveyByIdStub = (): LoadSurveyById => {
+  class LoadSurveyResultByIdStub implements LoadSurveyById {
+    async loadById (id: string): Promise<SurveyModel> {
+      return Promise.resolve(makeFakeLoadSurvey())
     }
   }
   return new LoadSurveyResultByIdStub()

@@ -1,6 +1,6 @@
 import { SaveSurveyResultRepository } from '../../../../data/protocols/db/survey'
 import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
-import { SaveSurveyResultModel } from '../../../../domain/usercases/save-survey-result'
+import { SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { mongoHelper } from '../helper/mongo-helper'
 import { ObjectId } from 'mongodb'
 import { QueryBuilder } from '../helper/query-builder'

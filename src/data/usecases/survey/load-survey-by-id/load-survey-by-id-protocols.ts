@@ -1,1 +1,2 @@
-export * from '../../../../domain/usercases/load-survey-result-by-id'
+export * from '../../../../domain/usercases/survey/load-survey-by-id'
+export * from '../../../../domain/model/survey-model'

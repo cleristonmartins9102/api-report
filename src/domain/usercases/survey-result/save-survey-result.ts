@@ -1,4 +1,4 @@
-import { SurveyResultModel } from '../model/survey-result-model'
+import { SurveyResultModel } from '../../model/survey-result-model'
 
 export type SaveSurveyResultModel = {
   surveyId: string
