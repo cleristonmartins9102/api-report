@@ -32,7 +32,7 @@ const makeSurveyResultModel = (): SurveyResultModel => ({
   question: 'any_question',
   answers: [
     {
-      answer: 'any',
+      answer: 'js',
       percent: 1,
       count: 1
     }
@@ -42,8 +42,8 @@ const makeSurveyResultModel = (): SurveyResultModel => ({
 
 const makeLoadSurveyByIdStub = (): LoadSurveyResultById => {
   class LoadSurveyResultByIdStub implements LoadSurveyResultById {
-    async loadById (id: string): Promise<SurveyModel> {
-      return Promise.resolve(makeFakeLoadSurvey())
+    async loadById (id: string): Promise<SurveyResultModel> {
+      return Promise.resolve(makeSurveyResultModel())
     }
   }
   return new LoadSurveyResultByIdStub()
@@ -136,7 +136,7 @@ describe('Save Survey Result Controller', () => {
       question: makeSurveyResultModel().question,
       answers: [
         {
-          answer: 'any',
+          answer: 'js',
           count: 1,
           percent: 1
         }

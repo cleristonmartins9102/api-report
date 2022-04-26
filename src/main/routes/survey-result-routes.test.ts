@@ -67,7 +67,7 @@ describe('Survey Routes', () => {
       await request(app)
         .put('/api/surveys/any_id/results')
         .send({
-          answer: 'any_answer'
+          answer: 'js'
         })
         .expect(403)
     })
