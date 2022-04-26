@@ -11,8 +11,8 @@ type SutTypes = {
 
 const makeSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (): Promise<SurveyResultModel> {
-      return makeSurveyResultModel()
+    async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
+      return makeSurveyResultModel() as any
     }
   }
   return new SaveSurveyResultRepositoryStub()
@@ -28,10 +28,16 @@ const makeSut = (): SutTypes => {
 }
 
 const makeSurveyResultModel = (): SurveyResultModel => ({
-  id: 'any_id',
   surveyId: 'any_survey_id',
-  accountId: 'any_account_id',
-  answer: 'any_answer',
+  question: 'any_question',
+  answers: [
+    {
+      image: 'any',
+      answer: 'any_answer',
+      count: 1,
+      percent: 1
+    }
+  ],
   create_at: new Date()
 })
 

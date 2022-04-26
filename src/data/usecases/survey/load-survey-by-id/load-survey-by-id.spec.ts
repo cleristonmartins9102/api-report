@@ -13,7 +13,7 @@ const makeFakeLoadSurvey = (): SurveyModel => (
         answer: 'any_answer'
       }
     ],
-    created_at: 'any_date'
+    create_at: 'any_date'
   }
 )
 

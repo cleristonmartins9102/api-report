@@ -14,7 +14,7 @@ export class SaveSurveyResultController implements Controller {
     try {
       const { answer } = httpRequest.body
       const { surveyId } = httpRequest.params
-      const { accountId } = httpRequest.accountId
+      const { accountId } = httpRequest
       const survey = await this.loadSurveyResult.loadById(surveyId)
       if (survey) {
         const ansFind = survey.answers.filter(a => a.answer === answer)
