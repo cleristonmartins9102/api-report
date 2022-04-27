@@ -1,8 +1,8 @@
 import { Controller, HttpRequest, HttpResponse } from './save-survey-controller-protocols'
-import { LoadSurveyById } from '../../../../domain/usercases/survey/load-survey-by-id'
-import { forbidden, ok, serverError } from '../../../helpers/http/http-helpers'
-import { InvalidParamError } from '../../../erros'
-import { SaveSurveyResult } from '../../../../domain/usercases/survey-result/save-survey-result'
+import { LoadSurveyById } from '../../../../../domain/usercases/survey/load-survey-by-id'
+import { forbidden, ok, serverError } from '../../../../helpers/http/http-helpers'
+import { InvalidParamError } from '../../../../erros'
+import { SaveSurveyResult } from '../../../../../domain/usercases/survey-result/save-survey-result'
 
 export class SaveSurveyResultController implements Controller {
   constructor (

@@ -5,13 +5,14 @@ import MockDate from 'mockdate'
 import { SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { SurveyModel } from '../../../../domain/model/survey-model'
 import { SaveSurveyResultRepository } from '../../../../data/protocols/db/survey'
+import { LoadSurveyResultRepository } from '../../../../data/protocols/db/survey/load-survey-result-repository'
 
 let accountCollection: Collection
 let resultCollection: Collection
 let surveyCollection: Collection
-
+type LoadSurvey = SaveSurveyResultRepository | LoadSurveyResultRepository
 type SutTypes = {
-  sut: SaveSurveyResultRepository
+  sut: any
 }
 const makeSut = (): SutTypes => {
   const sut = new SurveyResultMongoRepository()
@@ -44,6 +45,10 @@ const mockAddSurveyModel = async (): Promise<SurveyModel> => {
       {
         answer: 'php',
         image: 'php_img'
+      },
+      {
+        answer: 'java',
+        image: 'java_img'
       }
     ],
     created_at: new Date()
@@ -51,11 +56,11 @@ const mockAddSurveyModel = async (): Promise<SurveyModel> => {
   return mongoHelper.map(res.ops[0])
 }
 
-const mockSaveResultModel = async (survey: SurveyModel): Promise<SaveSurveyResultModel> => {
+const mockSaveResultModel = async (survey: SurveyModel, answerIdx: number = 0): Promise<SaveSurveyResultModel> => {
   return {
     surveyId: (survey as any).id,
     accountId: await mockAddAccoundModel(),
-    answer: survey.answers[0].answer,
+    answer: survey.answers[answerIdx].answer,
     create_at: new Date()
   }
 }
@@ -95,10 +100,35 @@ describe('Survey MongoRepository', () => {
       const { sut } = makeSut()
       const survey = (await mockAddSurveyModel())
       const saveResultModel = await mockSaveResultModel(survey)
-      const resp = await resultCollection.insertOne(saveResultModel)
+      await resultCollection.insertOne(saveResultModel)
       saveResultModel.answer = survey.answers[1].answer
       const surveyResult = await sut.save(saveResultModel)
       expect(surveyResult).toBeTruthy()
+    })
+  })
+
+  describe('LoadSurveyById', () => {
+    test('Should return correct SurveyResult on success', async () => {
+      const { sut } = makeSut()
+      const saveSurveyResultArray = []
+      const survey = (await mockAddSurveyModel())
+      saveSurveyResultArray.push(await mockSaveResultModel(survey) as never)
+      saveSurveyResultArray.push(await mockSaveResultModel(survey) as never)
+      saveSurveyResultArray.push(await mockSaveResultModel(survey) as never)
+      saveSurveyResultArray.push(await mockSaveResultModel(survey, 1) as never)
+      saveSurveyResultArray.push(await mockSaveResultModel(survey, 1) as never)
+      saveSurveyResultArray.push(await mockSaveResultModel(survey, 2) as never)
+      await resultCollection.insertMany(saveSurveyResultArray)
+      const surveyResult = await sut.loadBySurveyId(survey.id)
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.answers[0].answer).toBe('py')
+      expect(surveyResult.answers[0].count).toBe(3)
+      expect(surveyResult.answers[1].answer).toBe('js')
+      expect(surveyResult.answers[1].count).toBe(2)
+      expect(surveyResult.answers[2].answer).toBe('php')
+      expect(surveyResult.answers[2].count).toBe(1)
+      expect(surveyResult.answers[3].answer).toBe('java')
+      expect(surveyResult.answers[3].count).toBe(0)
     })
   })
 })

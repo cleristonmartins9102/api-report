@@ -1,12 +1,12 @@
-import { SurveyModel } from '../../../../domain/model/survey-model'
-import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
-import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
-import { InvalidParamError } from '../../../erros'
-import { forbidden, ok, serverError } from '../../../helpers/http/http-helpers'
+import { SurveyModel } from '../../../../../domain/model/survey-model'
+import { SurveyResultModel } from '../../../../../domain/model/survey-result-model'
+import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../../domain/usercases/survey-result/save-survey-result'
+import { InvalidParamError } from '../../../../erros'
+import { forbidden, ok, serverError } from '../../../../helpers/http/http-helpers'
 import { Controller, HttpRequest } from './save-survey-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controler'
 import MockDate from 'mockdate'
-import { LoadSurveyById } from '../../../../domain/usercases/survey/load-survey-by-id'
+import { LoadSurveyById } from '../../../../../domain/usercases/survey/load-survey-by-id'
 
 type SutTypes = {
   sut: Controller

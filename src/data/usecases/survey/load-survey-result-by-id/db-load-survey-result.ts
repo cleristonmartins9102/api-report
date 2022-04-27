@@ -6,7 +6,7 @@ export class DbLoadSurveyResult implements LoadSurveyResult {
   ) {}
 
   async load (id: string): Promise<SurveyResultModel> {
-    await this.loadSurveyResultRepository.loadById(id)
-    return null as any
+    const response = await this.loadSurveyResultRepository.loadBySurveyId(id)
+    return response
   }
 }
