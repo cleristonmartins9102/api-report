@@ -1,6 +1,6 @@
 import { SurveyResultModel, SurveyModel, LoadSurveyResultRepository, LoadSurveyById, LoadSurveyResult, Controller, HttpRequest } from './load-survey-result-controller-protocols'
 import { LoadSurveyResultController } from './load-surver-result-controller'
-import { serverError } from '../../../../helpers/http/http-helpers'
+import { ok, serverError } from '../../../../helpers/http/http-helpers'
 
 const stubSurveyResult = (): SurveyResultModel => {
   return {
@@ -88,6 +88,13 @@ describe('LoadSurveyResult Controller', () => {
     await sut.handle(stubHttpRequest())
     expect(dbLoadSurveyResultSpy).toHaveBeenCalledWith('any_id')
   })
+
+  test('Should DbLoadSurveyResult returns 200 on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.handle(stubHttpRequest())
+    expect(response).toEqual(ok(stubSurveyResult()))
+  })
+
   test('Should throw if DbLoadSurveyResult throws', async () => {
     const { sut, dbLoadSurveyResult } = makeSut()
     jest.spyOn(dbLoadSurveyResult, 'load').mockImplementationOnce(() => {
