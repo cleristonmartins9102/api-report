@@ -6,11 +6,11 @@ import { LoadSurveyResultRepository } from '../../../protocols/db/survey/load-su
 export class DbSaveSurveyResult implements SaveSurveyResult {
   constructor (
     private readonly saveSurveyResultRepo: SaveSurveyResultRepository,
-    private readonly loadSurveyRepository: LoadSurveyResultRepository
+    private readonly loadSurveyResultRepository: LoadSurveyResultRepository
   ) {}
 
   async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
     await this.saveSurveyResultRepo.save(data)
-    return await this.loadSurveyRepository.loadBySurveyId(data.surveyId)
+    return await this.loadSurveyResultRepository.loadBySurveyId(data.surveyId)
   }
 }

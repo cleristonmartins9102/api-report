@@ -4,9 +4,9 @@ import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../../domain/u
 import { InvalidParamError } from '../../../../erros'
 import { forbidden, ok, serverError } from '../../../../helpers/http/http-helpers'
 import { Controller, HttpRequest } from './save-survey-controller-protocols'
-import { SaveSurveyResultController } from './save-survey-result-controler'
 import MockDate from 'mockdate'
 import { LoadSurveyById } from '../../../../../domain/usercases/survey/load-survey-by-id'
+import { SaveSurveyResultController } from './save-survey-result-controler'
 
 type SutTypes = {
   sut: Controller

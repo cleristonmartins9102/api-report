@@ -54,7 +54,7 @@ afterAll(async () => {
   await mongoHelper.close()
 })
 
-afterEach(async () => {
+beforeEach(async () => {
   surveyCollection = await mongoHelper.getCollection('survey')
   accountCollection = await mongoHelper.getCollection('accounts')
   await surveyCollection.deleteMany({})
@@ -81,6 +81,23 @@ describe('Survey Routes', () => {
         .send({
           answer: 'any_answer'
         })
+        .expect(200)
+    })
+  })
+
+  describe('GET /surveys/:surveyId/results', () => {
+    test('Should return 403 if no access token provided', async () => {
+      await request(app)
+        .get('/api/surveys/any_id/results')
+        .expect(403)
+    })
+
+    test('Should return 200 on succcess', async () => {
+      const idSurvey = await makeFakeAddSurvey()
+      const { accessToken } = await makeInsertFakeAccount()
+      await request(app)
+        .get(`/api/surveys/${idSurvey}/results`)
+        .set('x-access-token', accessToken)
         .expect(200)
     })
   })
