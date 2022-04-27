@@ -5,6 +5,7 @@ import { SurveyResultModel } from './db-load-survey-result-protocols'
 import { LoadSurveyResult } from '../../../../domain/usercases/survey-result/load-survey-result'
 import { serverError } from '../../../../presentation/helpers/http/http-helpers'
 import MockDate from 'mockdate'
+import { LoadSurveyById, SurveyModel } from '../load-survey-by-id/load-survey-by-id-protocols'
 
 const mockSurveyResult = (): SurveyResultModel => {
   return {
@@ -14,20 +15,35 @@ const mockSurveyResult = (): SurveyResultModel => {
       {
         answer: 'any_answer',
         image: 'any_image',
-        count: 1,
-        percent: 100
+        count: 0,
+        percent: 0
       }
     ],
     create_at: new Date()
   }
 }
 
+const stubLoadSurvey = (): SurveyModel => (
+  {
+    id: 'any_id',
+    question: 'any_question',
+    answers: [
+      {
+        answer: 'any_answer',
+        image: 'any_image'
+      }
+    ],
+    create_at: new Date()
+  }
+)
+
 type SutTypes = {
   sut: LoadSurveyResult
   loadSurveyResultRepo: LoadSurveyResultRepository
+  loadSurvey: LoadSurveyById
 }
 
-const stubLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
+const mockLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
   class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
     async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
       return mockSurveyResult()
@@ -36,12 +52,23 @@ const stubLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
   return new LoadSurveyResultRepositoryStub()
 }
 
+const mockLoadSurveyById = (): LoadSurveyById => {
+  class LoadSurveyByIdStub implements LoadSurveyById {
+    async loadById (surveyId: string): Promise<SurveyModel> {
+      return stubLoadSurvey()
+    }
+  }
+  return new LoadSurveyByIdStub()
+}
+
 const makeSut = (): SutTypes => {
-  const loadSurveyResultRepo = stubLoadSurveyResultRepository()
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepo)
+  const loadSurvey = mockLoadSurveyById()
+  const loadSurveyResultRepo = mockLoadSurveyResultRepository()
+  const sut = new DbLoadSurveyResult(loadSurveyResultRepo, loadSurvey)
   return {
     sut,
-    loadSurveyResultRepo
+    loadSurveyResultRepo,
+    loadSurvey
   }
 }
 
@@ -63,6 +90,13 @@ describe('LoadSurveyResult UserCase', () => {
 
   test('Should returns Survey Result on success', async () => {
     const { sut } = makeSut()
+    const response = await sut.load('any_id')
+    expect(response).toEqual(mockSurveyResult())
+  })
+
+  test('Should returns a valid SurveyResult if LoadSurveyResultRepository returns null', async () => {
+    const { sut, loadSurveyResultRepo } = makeSut()
+    jest.spyOn(loadSurveyResultRepo, 'loadBySurveyId').mockReturnValueOnce(Promise.resolve(null as any))
     const response = await sut.load('any_id')
     expect(response).toEqual(mockSurveyResult())
   })

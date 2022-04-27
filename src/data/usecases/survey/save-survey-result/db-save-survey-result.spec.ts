@@ -3,27 +3,40 @@ import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/user
 import { SaveSurveyResultRepository } from '../../../protocols/db/survey'
 import { DbSaveSurveyResult } from './db-save-survey-result'
 import MockDate from 'mockdate'
+import { LoadSurveyResultRepository } from '../load-survey-result-by-id/db-load-survey-result-protocols'
 
 type SutTypes = {
   sut: SaveSurveyResult
   saveSurveyRepositoryStub: SaveSurveyResultRepository
+  loadSurveyRepository: LoadSurveyResultRepository
 }
 
 const makeSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-    async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
+    async save (data: SaveSurveyResultModel): Promise<void> {
       return makeSurveyResultModel() as any
     }
   }
   return new SaveSurveyResultRepositoryStub()
 }
 
+const stubLoadSurveyRepository = (): LoadSurveyResultRepository => {
+  class LoadSurveyResultRepository implements LoadSurveyResultRepository {
+    async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
+      return makeSurveyResultModel()
+    }
+  }
+  return new LoadSurveyResultRepository()
+}
+
 const makeSut = (): SutTypes => {
   const saveSurveyRepositoryStub = makeSaveSurveyResultRepositoryStub()
-  const sut = new DbSaveSurveyResult(saveSurveyRepositoryStub)
+  const loadSurveyRepository = stubLoadSurveyRepository()
+  const sut = new DbSaveSurveyResult(saveSurveyRepositoryStub, loadSurveyRepository)
   return {
     sut,
-    saveSurveyRepositoryStub
+    saveSurveyRepositoryStub,
+    loadSurveyRepository
   }
 }
 
@@ -64,6 +77,13 @@ describe('Save Survey', () => {
     const saveSurveyRepoSpy = jest.spyOn(saveSurveyRepositoryStub, 'save')
     await sut.save(makeSaveSurveyResultModel())
     expect(saveSurveyRepoSpy).toBeCalledWith(makeSaveSurveyResultModel())
+  })
+
+  test('Shold call LoadSurveyResultRepository with correct value', async () => {
+    const { sut, loadSurveyRepository } = makeSut()
+    const loadSurveyRepositoryStubSpy = jest.spyOn(loadSurveyRepository, 'loadBySurveyId')
+    await sut.save(makeSaveSurveyResultModel())
+    expect(loadSurveyRepositoryStubSpy).toBeCalledWith(makeSaveSurveyResultModel().surveyId)
   })
 
   test('Shold throw if SaveSurveyRepository throws', async () => {

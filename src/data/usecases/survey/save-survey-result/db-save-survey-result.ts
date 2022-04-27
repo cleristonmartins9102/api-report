@@ -1,14 +1,16 @@
 import { SurveyResultModel } from '../../../../domain/model/survey-result-model'
 import { SaveSurveyResult, SaveSurveyResultModel } from '../../../../domain/usercases/survey-result/save-survey-result'
 import { SaveSurveyResultRepository } from '../../../protocols/db/survey'
+import { LoadSurveyResultRepository } from '../../../protocols/db/survey/load-survey-result-repository'
 
 export class DbSaveSurveyResult implements SaveSurveyResult {
   constructor (
-    private readonly saveSurveyResultRepo: SaveSurveyResultRepository
+    private readonly saveSurveyResultRepo: SaveSurveyResultRepository,
+    private readonly loadSurveyRepository: LoadSurveyResultRepository
   ) {}
 
   async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
-    const surveyResult = await this.saveSurveyResultRepo.save(data)
-    return surveyResult
+    await this.saveSurveyResultRepo.save(data)
+    return await this.loadSurveyRepository.loadBySurveyId(data.surveyId)
   }
 }

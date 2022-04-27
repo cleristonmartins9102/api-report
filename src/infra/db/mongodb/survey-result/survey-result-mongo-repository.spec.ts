@@ -90,10 +90,12 @@ describe('Survey MongoRepository', () => {
       const { sut } = makeSut()
       const survey = (await mockAddSurveyModel())
       const saveResultModel = await mockSaveResultModel(survey)
-      const surveyResult = await sut.save(saveResultModel)
-      expect(surveyResult).toBeTruthy()
-      expect(surveyResult.answers[0].count).toBe(1)
-      expect(surveyResult.answers[0].answer).toBe((survey.answers[0].answer))
+      await sut.save(saveResultModel)
+      const response = await resultCollection.findOne({
+        surveyId: survey.id
+      })
+      expect(response).toBeTruthy()
+      expect(response.answer).toBe('py')
     })
 
     test('Should update SurveyResult if it is not a new record', async () => {
@@ -102,8 +104,15 @@ describe('Survey MongoRepository', () => {
       const saveResultModel = await mockSaveResultModel(survey)
       await resultCollection.insertOne(saveResultModel)
       saveResultModel.answer = survey.answers[1].answer
-      const surveyResult = await sut.save(saveResultModel)
+      await sut.save(saveResultModel)
+      const surveyResult = await resultCollection.findOne(
+        {
+          surveyId: saveResultModel.surveyId,
+          accountId: saveResultModel.accountId
+        }
+      )
       expect(surveyResult).toBeTruthy()
+      expect(surveyResult.answer).toBe(survey.answers[1].answer)
     })
   })
 
