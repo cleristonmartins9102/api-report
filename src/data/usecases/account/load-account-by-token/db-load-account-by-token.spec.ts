@@ -61,8 +61,8 @@ describe('Db Load Account By Token', () => {
     const { sut, decrypterStub } = makeSut()
     jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.reject(new Error()))
     const token = 'any_token'
-    const error = sut.load(token, 'any_role')
-    await expect(error).rejects.toThrow(new Error())
+    const error = await sut.load(token, 'any_role')
+    expect(error).toBeNull()
   })
 
   test('Should call LoadAccountByTokenRepository with correct value', async () => {
