@@ -166,14 +166,14 @@ describe('DBAuthentication UseCase', () => {
     expect(promise).rejects.toThrow()
   })
 
-  test('Should ensure returns token on success', async () => {
+  test('Should ensure returns AuthenticationModel on success', async () => {
     const { email, password } = makeFakeAccount()
     const { sut } = makeSut()
-    const accessToken = await sut.auth(
+    const data = await sut.auth(
       email,
       password
     )
-    expect(accessToken).toBe('hash_token')
+    expect(data).toEqual({ accessToken: 'hash_token', name: 'any_name' })
   })
 
   test('Should call UpdateAccessTokenRepository with correct value', async () => {
